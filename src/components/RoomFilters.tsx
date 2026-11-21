@@ -1,95 +1,76 @@
-import { MAX_ATTENDEES } from '@/lib/roomFilters';
+import { Users } from 'lucide-react';
 
 interface RoomFiltersProps {
-  attendeesInput: string;
-  attendeesError: string | null;
+  minCapacity: number;
   equipmentOptions: string[];
   selectedEquipment: string[];
-  hasActiveFilters: boolean;
-  onAttendeesChange: (value: string) => void;
-  onEquipmentToggle: (item: string) => void;
+  onMinCapacityChange: (value: number) => void;
+  onToggleEquipment: (item: string) => void;
   onClear: () => void;
 }
 
 export default function RoomFilters({
-  attendeesInput,
-  attendeesError,
+  minCapacity,
   equipmentOptions,
   selectedEquipment,
-  hasActiveFilters,
-  onAttendeesChange,
-  onEquipmentToggle,
+  onMinCapacityChange,
+  onToggleEquipment,
   onClear,
 }: RoomFiltersProps) {
-  return (
-    <div className="mb-5 rounded-xl border border-slate-200 bg-slate-50/60 p-4">
-      <div className="flex items-center justify-between gap-3 mb-3">
-        <h3 className="text-sm font-semibold">Filter rooms</h3>
-        {hasActiveFilters && (
-          <button
-            type="button"
-            onClick={onClear}
-            className="text-xs font-medium text-teal-700 hover:text-teal-800 rounded focus:outline-none focus:ring-2 focus:ring-teal-500/40"
-          >
-            Clear filters
-          </button>
-        )}
-      </div>
+  const isFiltered = minCapacity > 0 || selectedEquipment.length > 0;
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div>
-          <label htmlFor="attendees" className="block text-sm font-medium mb-1.5">
-            Number of attendees
+  return (
+    <div className="mb-4 space-y-4 rounded-xl border border-slate-200 bg-white p-4">
+      <div className="grid gap-4 sm:grid-cols-[160px_1fr] sm:items-start">
+        <div className="flex flex-col gap-1">
+          <label htmlFor="min-capacity" className="flex items-center gap-1 text-sm font-medium text-slate-600">
+            <Users size={14} /> Min. capacity
           </label>
           <input
-            id="attendees"
+            id="min-capacity"
             type="number"
-            inputMode="numeric"
-            min={1}
-            max={MAX_ATTENDEES}
-            step={1}
-            placeholder="Any"
-            value={attendeesInput}
-            onChange={(e) => onAttendeesChange(e.target.value)}
-            aria-invalid={attendeesError ? true : undefined}
-            aria-describedby={attendeesError ? 'attendees-error' : undefined}
-            className={[
-              'w-full rounded-lg border bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-500',
-              attendeesError ? 'border-red-400' : 'border-slate-300',
-            ].join(' ')}
+            min={0}
+            value={minCapacity}
+            onChange={(e) => onMinCapacityChange(Math.max(0, Number(e.target.value)))}
+            className="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"
           />
-          {attendeesError && (
-            <p id="attendees-error" role="alert" className="mt-1.5 text-xs text-red-700">
-              {attendeesError}
-            </p>
-          )}
         </div>
 
-        <fieldset className="sm:col-span-2 min-w-0">
-          <legend className="block text-sm font-medium mb-1.5">Required equipment</legend>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
+        <div className="flex flex-col gap-1">
+          <span className="text-sm font-medium text-slate-600">Required equipment</span>
+          <div className="flex flex-wrap gap-2">
             {equipmentOptions.map((item) => {
-              const id = `equipment-${item.toLowerCase().replace(/\s+/g, '-')}`;
+              const isSelected = selectedEquipment.includes(item);
               return (
-                <label
+                <button
                   key={item}
-                  htmlFor={id}
-                  className="inline-flex items-center gap-2 text-sm cursor-pointer"
+                  type="button"
+                  aria-pressed={isSelected}
+                  onClick={() => onToggleEquipment(item)}
+                  className={[
+                    'rounded-full border px-3 py-1 text-xs font-medium transition-colors',
+                    isSelected
+                      ? 'border-teal-600 bg-teal-600 text-white'
+                      : 'border-slate-300 bg-white text-slate-600 hover:border-teal-300 hover:text-teal-700',
+                  ].join(' ')}
                 >
-                  <input
-                    id={id}
-                    type="checkbox"
-                    checked={selectedEquipment.includes(item)}
-                    onChange={() => onEquipmentToggle(item)}
-                    className="h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500/40"
-                  />
                   {item}
-                </label>
+                </button>
               );
             })}
           </div>
-        </fieldset>
+        </div>
       </div>
+
+      {isFiltered && (
+        <button
+          type="button"
+          onClick={onClear}
+          className="text-sm font-medium text-teal-700 underline-offset-2 hover:underline"
+        >
+          Clear filters
+        </button>
+      )}
     </div>
   );
 }

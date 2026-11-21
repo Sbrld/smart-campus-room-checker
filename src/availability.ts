@@ -1,80 +1,67 @@
+import type { Room, Booking, AvailabilityResult, CheckInputs } from './types';
+import { DAY_END_MINUTES, MAX_BOOKING_MINUTES } from './constants';
 
-import type { Booking, CheckResult, Room } from '@/types';
-
-export const MINUTES_PER_DAY = 1440;
-export const MAX_BOOKING_LENGTH = 120;
-
-function intervalsOverlap(
-  aStart: number,
-  aEnd: number,
-  bStart: number,
-  bEnd: number,
-): boolean {
-  // Touching endpoints are allowed.
-  return aStart < bEnd && bStart < aEnd;
-}
-
+/**
+ * Checks whether a candidate interval can be booked for the given room.
+ *
+ * AC1: Accept only when 0 ≤ start < end ≤ 1440 and start ≥ currentTime.
+ * AC2: Reject if the booking is longer than 120 minutes.
+ * AC3: Reject if the room is blocked.
+ * AC4: Reject if the interval overlaps an existing booking (touching endpoints allowed).
+ */
 export function checkAvailability(
-  room: Room,
+  room: Room | null,
   start: number,
   end: number,
   currentTime: number,
-): CheckResult {
-  // AC1: Validate interval and current time.
-  if (!(0 <= start && start < end && end <= MINUTES_PER_DAY)) {
-    return {
-      available: false,
-      reason: 'Invalid time interval. Start must be before end, and both within 00:00–24:00.',
-    };
+  bookings: Booking[]
+): AvailabilityResult {
+  if (!room) {
+    return { decision: 'unavailable', reasons: ['Please select a room first.'] };
   }
 
+  const reasons: string[] = [];
+
+  // AC1 — interval validity
+  if (start < 0 || end > DAY_END_MINUTES || start >= end) {
+    reasons.push(`Interval must satisfy 0 ≤ start < end ≤ ${DAY_END_MINUTES} (minutes of day).`);
+  }
   if (start <= currentTime) {
-    return {
-      available: false,
-      reason: 'Start time must be after the current time.',
-    };
+    reasons.push(`Start time must be strictly after the current time (${currentTime} min).`);
   }
 
-  // AC2: Maximum booking duration is 120 minutes.
-  if (end - start > MAX_BOOKING_LENGTH) {
-    return {
-      available: false,
-      reason: `Booking exceeds the ${MAX_BOOKING_LENGTH}-minute maximum (requested ${end - start} min).`,
-    };
+  // AC2 — max 120-minute booking
+  if (end - start > MAX_BOOKING_MINUTES) {
+    reasons.push(`Bookings cannot be longer than ${MAX_BOOKING_MINUTES} minutes.`);
   }
 
-  // AC3: Blocked rooms are unavailable.
+  // AC3 — blocked room
   if (room.blocked) {
-    return {
-      available: false,
-      reason: `Room is blocked: ${room.blockedReason ?? 'unavailable for booking.'}`,
-    };
+    reasons.push('This room is currently blocked and cannot be booked.');
   }
 
-  // AC4: Check overlap without modifying bookings.
-  const conflict = room.bookings.find((b: Booking) =>
-    intervalsOverlap(start, end, b.start, b.end),
+  // AC4 — overlap check (touching endpoints allowed)
+  const overlapping = bookings.filter(
+    (b) =>
+      b.roomId === room.id &&
+      b.start < end && // existing start before candidate end
+      start < b.end     // candidate start before existing end
   );
-
-  if (conflict) {
-    return {
-      available: false,
-      reason: `Overlaps existing booking "${conflict.title}" (${fmt(conflict.start)}–${fmt(conflict.end)}).`,
-    };
+  if (overlapping.length > 0) {
+    reasons.push('The interval overlaps an existing booking.');
   }
 
-  const duration = end - start;
-
-  // AC5: Return the result without modifying booking data.
-  return {
-    available: true,
-    reason: `Room is available for ${duration} min (${fmt(start)}–${fmt(end)}).`,
-  };
+  if (reasons.length > 0) {
+    return { decision: 'unavailable', reasons };
+  }
+  return { decision: 'available', reasons: ['This room is available for the selected interval.'] };
 }
 
-export function fmt(minutes: number): string {
-  const h = Math.floor(minutes / 60);
-  const m = minutes % 60;
-
-  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+export function isSameCheck(a: CheckInputs, b: CheckInputs): boolean {
+  return (
+    a.roomId === b.roomId &&
+    a.start === b.start &&
+    a.end === b.end &&
+    a.currentTime === b.currentTime
+  );
 }
