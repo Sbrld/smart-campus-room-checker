@@ -21,7 +21,11 @@ export const mockLlmAdapter: LlmAdapter = {
       return { text, source: 'mock-llm' };
     }
 
-    const reasonList = req.reasons.join(' ');
+    const cleanedReasons = req.reasons
+      .map((r) => r.trim().replace(/[.!?]+$/, ''))
+      .filter(Boolean);
+    const reasonList =
+      cleanedReasons.length > 0 ? `${cleanedReasons.join('; ')}.` : '';
     const text =
       `${req.roomName} cannot be booked from ${window}. ` +
       `Why: ${reasonList}`;

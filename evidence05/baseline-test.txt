@@ -1,0 +1,24 @@
+Command: npm test
+Exit Code: 0
+
+--- Output ---
+
+> vite-react-typescript-starter@0.0.0 test
+> vitest run
+
+
+ RUN  v2.1.9 C:/Users/Aldo/Desktop/project
+
+ ✓ src/__tests__/time.test.ts (2 tests) 2ms
+ ✓ src/__tests__/roomFilters.test.ts (10 tests) 4ms
+ ✓ src/__tests__/availability.test.ts (19 tests) 5ms
+ ✓ src/__tests__/availability.regression.test.ts (7 tests) 5ms
+ ✓ src/__tests__/BookingSchedule.test.tsx (1 test) 5ms
+ ✓ src/__tests__/components.test.tsx (5 tests) 10ms
+ ✓ src/__tests__/App.test.tsx (2 tests) 177ms
+ ✓ src/__tests__/explain.test.tsx (24 tests) 390ms
+
+ Test Files  8 passed (8)
+      Tests  70 passed (70)
+   Start at  18:38:50
+   Duration  2.34s (transform 318ms, setup 0ms, collect 1.19s, tests 598ms, environment 1.66s, prepare 4.11s)

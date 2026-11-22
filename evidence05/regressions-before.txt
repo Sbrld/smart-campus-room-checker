@@ -1,0 +1,381 @@
+Command: npm test
+Exit Code: 1
+
+--- Output ---
+
+> vite-react-typescript-starter@0.0.0 test
+> vitest run
+
+
+ RUN  v2.1.9 C:/Users/Aldo/Desktop/project
+
+ ✓ src/__tests__/time.test.ts (2 tests) 2ms
+ ✓ src/__tests__/roomFilters.test.ts (10 tests) 5ms
+ ✓ src/__tests__/availability.test.ts (19 tests) 4ms
+ ✓ src/__tests__/availability.regression.test.ts (7 tests) 5ms
+ ✓ src/__tests__/BookingSchedule.test.tsx (1 test) 6ms
+ ✓ src/__tests__/components.test.tsx (5 tests) 15ms
+ ❯ src/__tests__/riskRegressions.test.tsx (2 tests | 2 failed) 46ms
+   × Risk regression tests (R-01, R-02) > R-01: explains multi-reason unavailability without degrading to fallback 5ms
+     → expected 'Explanation temporarily unavailable.' not to be 'Explanation temporarily unavailable.' // Object.is equality
+   × Risk regression tests (R-01, R-02) > R-02: associates TimeSelector labels with inputs so Start Time edits trigger the invalid-interval rule 41ms
+     → Found a label with the text of: /Current Time/i, however no form control was found associated to that label. Make sure you're using the "for" attribute or "aria-labelledby" attribute correctly.
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100"
+    >
+      <header
+        class="border-b border-slate-200 bg-white"
+      >
+        <div
+          class="mx-auto flex max-w-5xl items-center gap-3 px-4 py-5"
+        >
+          <div
+            class="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-600 text-white"
+          >
+            <svg
+              class="lucide lucide-calendar-days"
+              fill="none"
+              height="22"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="22"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M8 2v4"
+              />
+              <path
+                d="M16 2v4"
+              />
+              <rect
+                height="18"
+                rx="2"
+                width="18"
+                x="3"
+                y="4"
+              />
+              <path
+                d="M3 10h18"
+              />
+              <path
+                d="M8 14h.01"
+              />
+              <path
+                d="M12 14h.01"
+              />
+              <path
+                d="M16 14h.01"
+              />
+              <path
+                d="M8 18h.01"
+              />
+              <path
+                d="M12 18h.01"
+              />
+              <path
+                d="M16 18h.01"
+              />
+            </svg>
+          </div>
+          <div>
+            <h1
+              class="text-xl font-bold text-slate-800"
+            >
+              Smart Campus Room Checker
+            </h1>
+            <p
+              class="text-sm text-slate-500"
+            >
+              Check room availability before you book
+            </p>
+          </div>
+        </div>
+      </header>
+      <main
+        class="mx-auto max-w-5xl px-4 py-8"
+      >
+        <div
+          class="grid gap-8 lg:grid-cols-[1fr_360px]"
+        >
+          <div
+            class="space-y-6"
+          >
+            <section>
+              <h2
+                class="mb-3 flex items-center gap-2 text-lg font-semibold text-slate-700"
+              >
+                <svg
+                  class="lucide lucide-building2 text-teal-600"
+                  fill="none"
+                  height="18"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="18"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"
+                  />
+                  <path
+                    d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"
+                  />
+                  <path
+                    d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"
+                  />
+                  <path
+                    d="M10 6h4"
+                  />
+                  <path
+                    d="M10 10h4"
+                  />
+                  <path
+                    d="M10 14h4"
+                  />
+                  <path
+                    d="M10 18h4"
+                  />
+                </svg>
+                 Select a Room
+              </h2>
+              <div
+                class="mb-4 space-y-4 rounded-xl border border-slate-200 bg-white p-4"
+              >
+                <div
+                  class="grid gap-4 sm:grid-cols-[160px_1fr] sm:items-start"
+                >
+                  <div
+                    class="flex flex-col gap-1"
+                  >
+                    <label
+                      class="flex items-center gap-1 text-sm font-medium text-slate-600"
+                      for="min-capacity"
+                    >
+                      <svg
+                        class="lucide lucide-users"
+                        fill="none"
+                        height="14"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="14"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"
+                        />
+                        <circle
+                          cx="9"
+                          cy="7"
+                          r="4"
+                        />
+               ...
+ ✓ src/__tests__/App.test.tsx (2 tests) 188ms
+ ✓ src/__tests__/explain.test.tsx (24 tests) 421ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/riskRegressions.test.tsx > Risk regression tests (R-01, R-02) > R-01: explains multi-reason unavailability without degrading to fallback
+AssertionError: expected 'Explanation temporarily unavailable.' not to be 'Explanation temporarily unavailable.' // Object.is equality
+ ❯ src/__tests__/riskRegressions.test.tsx:30:26
+     28|     });
+     29| 
+     30|     expect(res.text).not.toBe(EXPLAIN_FALLBACK_TEXT);
+       |                          ^
+     31|     expect(res.text).toContain(blockedRoom.name);
+     32|     expect(res.text).toContain('Bookings cannot be longer than 120 min…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/__tests__/riskRegressions.test.tsx > Risk regression tests (R-01, R-02) > R-02: associates TimeSelector labels with inputs so Start Time edits trigger the invalid-interval rule
+TestingLibraryElementError: Found a label with the text of: /Current Time/i, however no form control was found associated to that label. Make sure you're using the "for" attribute or "aria-labelledby" attribute correctly.
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100"
+    >
+      <header
+        class="border-b border-slate-200 bg-white"
+      >
+        <div
+          class="mx-auto flex max-w-5xl items-center gap-3 px-4 py-5"
+        >
+          <div
+            class="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-600 text-white"
+          >
+            <svg
+              class="lucide lucide-calendar-days"
+              fill="none"
+              height="22"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="22"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M8 2v4"
+              />
+              <path
+                d="M16 2v4"
+              />
+              <rect
+                height="18"
+                rx="2"
+                width="18"
+                x="3"
+                y="4"
+              />
+              <path
+                d="M3 10h18"
+              />
+              <path
+                d="M8 14h.01"
+              />
+              <path
+                d="M12 14h.01"
+              />
+              <path
+                d="M16 14h.01"
+              />
+              <path
+                d="M8 18h.01"
+              />
+              <path
+                d="M12 18h.01"
+              />
+              <path
+                d="M16 18h.01"
+              />
+            </svg>
+          </div>
+          <div>
+            <h1
+              class="text-xl font-bold text-slate-800"
+            >
+              Smart Campus Room Checker
+            </h1>
+            <p
+              class="text-sm text-slate-500"
+            >
+              Check room availability before you book
+            </p>
+          </div>
+        </div>
+      </header>
+      <main
+        class="mx-auto max-w-5xl px-4 py-8"
+      >
+        <div
+          class="grid gap-8 lg:grid-cols-[1fr_360px]"
+        >
+          <div
+            class="space-y-6"
+          >
+            <section>
+              <h2
+                class="mb-3 flex items-center gap-2 text-lg font-semibold text-slate-700"
+              >
+                <svg
+                  class="lucide lucide-building2 text-teal-600"
+                  fill="none"
+                  height="18"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="18"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"
+                  />
+                  <path
+                    d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"
+                  />
+                  <path
+                    d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"
+                  />
+                  <path
+                    d="M10 6h4"
+                  />
+                  <path
+                    d="M10 10h4"
+                  />
+                  <path
+                    d="M10 14h4"
+                  />
+                  <path
+                    d="M10 18h4"
+                  />
+                </svg>
+                 Select a Room
+              </h2>
+              <div
+                class="mb-4 space-y-4 rounded-xl border border-slate-200 bg-white p-4"
+              >
+                <div
+                  class="grid gap-4 sm:grid-cols-[160px_1fr] sm:items-start"
+                >
+                  <div
+                    class="flex flex-col gap-1"
+                  >
+                    <label
+                      class="flex items-center gap-1 text-sm font-medium text-slate-600"
+                      for="min-capacity"
+                    >
+                      <svg
+                        class="lucide lucide-users"
+                        fill="none"
+                        height="14"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="14"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"
+                        />
+                        <circle
+                          cx="9"
+                          cy="7"
+                          r="4"
+                        />
+               ...
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getAllByLabelText node_modules/@testing-library/dom/dist/queries/label-text.js:108:40
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/__tests__/riskRegressions.test.tsx:39:19
+     37|     render(<App />);
+     38| 
+     39|     expect(screen.getByLabelText(/Current Time/i)).toBeTruthy();
+       |                   ^
+     40|     const startInput = screen.getByLabelText(/Start Time/i);
+     41|     expect(screen.getByLabelText(/End Time/i)).toBeTruthy();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+ Test Files  1 failed | 8 passed (9)
+      Tests  2 failed | 70 passed (72)
+   Start at  18:49:09
+   Duration  2.28s (transform 343ms, setup 0ms, collect 1.73s, tests 693ms, environment 2.91s, prepare 1.61s)

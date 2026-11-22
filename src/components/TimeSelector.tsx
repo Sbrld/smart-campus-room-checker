@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import { DAY_END_MINUTES } from '../constants';
 import { minutesToLabel } from '../time';
 
@@ -12,10 +13,15 @@ interface TimeSelectorProps {
  * Stores minutes-from-midnight internally.
  */
 export default function TimeSelector({ label, value, onChange }: TimeSelectorProps) {
+  const inputId = useId();
+
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-sm font-medium text-slate-600">{label}</label>
+      <label htmlFor={inputId} className="text-sm font-medium text-slate-600">
+        {label}
+      </label>
       <input
+        id={inputId}
         type="number"
         min={0}
         max={DAY_END_MINUTES}
