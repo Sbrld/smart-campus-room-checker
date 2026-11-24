@@ -28,8 +28,9 @@ describe('checkAvailability — AC1–AC6 case table', () => {
     const room = makeRoom();
     const bookings = makeBookings();
     const result = checkAvailability(room, 660, 720, CURRENT_TIME, bookings);
-    expect(result.decision).toBe('available');
-    expect(result.reasons.length).toBeGreaterThan(0);
+    expect(result.available).toBe(true);
+    expect(result.reasonCode).toBe('AVAILABLE');
+    expect(result.message.length).toBeGreaterThan(0);
   });
 
   // T02 — 540–570, starts at current time → Unavailable (start must be strictly after now)
@@ -37,9 +38,9 @@ describe('checkAvailability — AC1–AC6 case table', () => {
     const room = makeRoom();
     const bookings = makeBookings();
     const result = checkAvailability(room, 540, 570, CURRENT_TIME, bookings);
-    expect(result.decision).toBe('unavailable');
-    expect(result.reasons.length).toBeGreaterThan(0);
-    expect(result.reasons.some((r) => r.includes('strictly after'))).toBe(true);
+    expect(result.available).toBe(false);
+    expect(result.reasonCode).toBe('PAST_START_TIME');
+    expect(result.message).toContain('strictly after');
   });
 
   // T03 — 720–720, zero duration → Unavailable
@@ -47,9 +48,9 @@ describe('checkAvailability — AC1–AC6 case table', () => {
     const room = makeRoom();
     const bookings = makeBookings();
     const result = checkAvailability(room, 720, 720, CURRENT_TIME, bookings);
-    expect(result.decision).toBe('unavailable');
-    expect(result.reasons.length).toBeGreaterThan(0);
-    expect(result.reasons.some((r) => r.includes('Interval must satisfy'))).toBe(true);
+    expect(result.available).toBe(false);
+    expect(result.reasonCode).toBe('INVALID_INPUT');
+    expect(result.message).toContain('Interval must satisfy');
   });
 
   // T04 — 750–720, reversed interval → Unavailable
@@ -57,9 +58,9 @@ describe('checkAvailability — AC1–AC6 case table', () => {
     const room = makeRoom();
     const bookings = makeBookings();
     const result = checkAvailability(room, 750, 720, CURRENT_TIME, bookings);
-    expect(result.decision).toBe('unavailable');
-    expect(result.reasons.length).toBeGreaterThan(0);
-    expect(result.reasons.some((r) => r.includes('Interval must satisfy'))).toBe(true);
+    expect(result.available).toBe(false);
+    expect(result.reasonCode).toBe('INVALID_INPUT');
+    expect(result.message).toContain('Interval must satisfy');
   });
 
   // T05 — 1380–1441, past day end → Unavailable
@@ -67,9 +68,9 @@ describe('checkAvailability — AC1–AC6 case table', () => {
     const room = makeRoom();
     const bookings = makeBookings();
     const result = checkAvailability(room, 1380, 1441, CURRENT_TIME, bookings);
-    expect(result.decision).toBe('unavailable');
-    expect(result.reasons.length).toBeGreaterThan(0);
-    expect(result.reasons.some((r) => r.includes('Interval must satisfy'))).toBe(true);
+    expect(result.available).toBe(false);
+    expect(result.reasonCode).toBe('INVALID_INPUT');
+    expect(result.message).toContain('Interval must satisfy');
   });
 
   // T06 — 720–840, exactly 120 minutes → Available
@@ -77,8 +78,9 @@ describe('checkAvailability — AC1–AC6 case table', () => {
     const room = makeRoom();
     const bookings = makeBookings();
     const result = checkAvailability(room, 720, 840, CURRENT_TIME, bookings);
-    expect(result.decision).toBe('available');
-    expect(result.reasons.length).toBeGreaterThan(0);
+    expect(result.available).toBe(true);
+    expect(result.reasonCode).toBe('AVAILABLE');
+    expect(result.message.length).toBeGreaterThan(0);
   });
 
   // T07 — 720–841, 121 minutes → Unavailable
@@ -86,9 +88,9 @@ describe('checkAvailability — AC1–AC6 case table', () => {
     const room = makeRoom();
     const bookings = makeBookings();
     const result = checkAvailability(room, 720, 841, CURRENT_TIME, bookings);
-    expect(result.decision).toBe('unavailable');
-    expect(result.reasons.length).toBeGreaterThan(0);
-    expect(result.reasons.some((r) => r.includes('longer than 120'))).toBe(true);
+    expect(result.available).toBe(false);
+    expect(result.reasonCode).toBe('INVALID_DURATION');
+    expect(result.message).toContain('longer than 120');
   });
 
   // T08 — 570–600, touching before existing booking → Available
@@ -96,8 +98,9 @@ describe('checkAvailability — AC1–AC6 case table', () => {
     const room = makeRoom();
     const bookings = makeBookings();
     const result = checkAvailability(room, 570, 600, CURRENT_TIME, bookings);
-    expect(result.decision).toBe('available');
-    expect(result.reasons.length).toBeGreaterThan(0);
+    expect(result.available).toBe(true);
+    expect(result.reasonCode).toBe('AVAILABLE');
+    expect(result.message.length).toBeGreaterThan(0);
   });
 
   // T09 — 630–690, partial overlap → Unavailable
@@ -105,9 +108,9 @@ describe('checkAvailability — AC1–AC6 case table', () => {
     const room = makeRoom();
     const bookings = makeBookings();
     const result = checkAvailability(room, 630, 690, CURRENT_TIME, bookings);
-    expect(result.decision).toBe('unavailable');
-    expect(result.reasons.length).toBeGreaterThan(0);
-    expect(result.reasons.some((r) => r.includes('overlaps'))).toBe(true);
+    expect(result.available).toBe(false);
+    expect(result.reasonCode).toBe('BOOKING_OVERLAP');
+    expect(result.message).toContain('overlaps');
   });
 
   // T10 — 570–690, contains existing booking → Unavailable
@@ -115,9 +118,9 @@ describe('checkAvailability — AC1–AC6 case table', () => {
     const room = makeRoom();
     const bookings = makeBookings();
     const result = checkAvailability(room, 570, 690, CURRENT_TIME, bookings);
-    expect(result.decision).toBe('unavailable');
-    expect(result.reasons.length).toBeGreaterThan(0);
-    expect(result.reasons.some((r) => r.includes('overlaps'))).toBe(true);
+    expect(result.available).toBe(false);
+    expect(result.reasonCode).toBe('BOOKING_OVERLAP');
+    expect(result.message).toContain('overlaps');
   });
 
   // T11 — 615–645, inside existing booking → Unavailable
@@ -125,9 +128,9 @@ describe('checkAvailability — AC1–AC6 case table', () => {
     const room = makeRoom();
     const bookings = makeBookings();
     const result = checkAvailability(room, 615, 645, CURRENT_TIME, bookings);
-    expect(result.decision).toBe('unavailable');
-    expect(result.reasons.length).toBeGreaterThan(0);
-    expect(result.reasons.some((r) => r.includes('overlaps'))).toBe(true);
+    expect(result.available).toBe(false);
+    expect(result.reasonCode).toBe('BOOKING_OVERLAP');
+    expect(result.message).toContain('overlaps');
   });
 
   // T12 — 600–660, identical interval → Unavailable
@@ -135,22 +138,20 @@ describe('checkAvailability — AC1–AC6 case table', () => {
     const room = makeRoom();
     const bookings = makeBookings();
     const result = checkAvailability(room, 600, 660, CURRENT_TIME, bookings);
-    expect(result.decision).toBe('unavailable');
-    expect(result.reasons.length).toBeGreaterThan(0);
-    expect(result.reasons.some((r) => r.includes('overlaps'))).toBe(true);
+    expect(result.available).toBe(false);
+    expect(result.reasonCode).toBe('BOOKING_OVERLAP');
+    expect(result.message).toContain('overlaps');
   });
 
   // T13 — 660–720, blocked room → Unavailable
-  // R-06: Assert the blocked-room reason is present and the overlap reason is absent
-  // to confirm the rejection comes from AC3, not a coincidental AC4 trigger.
+  // R-06: Assert the reason code comes from AC3, not a coincidental AC4 trigger.
   it('T13: 660–720 blocked room is unavailable with blocked reason only', () => {
     const room = makeRoom({ blocked: true });
     const bookings = makeBookings();
     const result = checkAvailability(room, 660, 720, CURRENT_TIME, bookings);
-    expect(result.decision).toBe('unavailable');
-    expect(result.reasons.length).toBeGreaterThan(0);
-    expect(result.reasons.some((r) => r.includes('blocked'))).toBe(true);
-    expect(result.reasons.some((r) => r.includes('overlaps'))).toBe(false);
+    expect(result.available).toBe(false);
+    expect(result.reasonCode).toBe('ROOM_BLOCKED');
+    expect(result.message).toContain('blocked');
   });
 
   // T14 — 630–690, no existing bookings → Available
@@ -158,8 +159,9 @@ describe('checkAvailability — AC1–AC6 case table', () => {
     const room = makeRoom();
     const bookings: Booking[] = [];
     const result = checkAvailability(room, 630, 690, CURRENT_TIME, bookings);
-    expect(result.decision).toBe('available');
-    expect(result.reasons.length).toBeGreaterThan(0);
+    expect(result.available).toBe(true);
+    expect(result.reasonCode).toBe('AVAILABLE');
+    expect(result.message.length).toBeGreaterThan(0);
   });
 
   // T15 — Booking data remains unchanged after a check (AC5)
@@ -185,9 +187,9 @@ describe('checkAvailability — AC1–AC6 case table', () => {
     const room = makeRoom();
     const bookings = makeBookings();
     const result = checkAvailability(room, 0, 60, CURRENT_TIME, bookings);
-    expect(result.decision).toBe('unavailable');
-    expect(result.reasons.length).toBeGreaterThan(0);
-    expect(result.reasons.some((r) => r.includes('strictly after'))).toBe(true);
+    expect(result.available).toBe(false);
+    expect(result.reasonCode).toBe('PAST_START_TIME');
+    expect(result.message).toContain('strictly after');
   });
 
   // T17 — 660–720, overlap exists only for a different room → Available
@@ -198,8 +200,9 @@ describe('checkAvailability — AC1–AC6 case table', () => {
       { id: 'b2', roomId: 'r1', start: 670, end: 710 },
     ];
     const result = checkAvailability(room, 660, 720, CURRENT_TIME, bookings);
-    expect(result.decision).toBe('available');
-    expect(result.reasons.length).toBeGreaterThan(0);
+    expect(result.available).toBe(true);
+    expect(result.reasonCode).toBe('AVAILABLE');
+    expect(result.message.length).toBeGreaterThan(0);
   });
 
   // T18 — -1–60, negative start time → Unavailable (R-02)
@@ -207,9 +210,9 @@ describe('checkAvailability — AC1–AC6 case table', () => {
     const room = makeRoom();
     const bookings = makeBookings();
     const result = checkAvailability(room, -1, 60, CURRENT_TIME, bookings);
-    expect(result.decision).toBe('unavailable');
-    expect(result.reasons.length).toBeGreaterThan(0);
-    expect(result.reasons.some((r) => r.includes('Interval must satisfy'))).toBe(true);
+    expect(result.available).toBe(false);
+    expect(result.reasonCode).toBe('INVALID_INPUT');
+    expect(result.message).toContain('Interval must satisfy');
   });
 
   // T19 — 1381–1440, exact end-of-day boundary → Available (R-03)
@@ -217,7 +220,17 @@ describe('checkAvailability — AC1–AC6 case table', () => {
     const room = makeRoom();
     const bookings = makeBookings();
     const result = checkAvailability(room, 1381, 1440, CURRENT_TIME, bookings);
-    expect(result.decision).toBe('available');
-    expect(result.reasons.length).toBeGreaterThan(0);
+    expect(result.available).toBe(true);
+    expect(result.reasonCode).toBe('AVAILABLE');
+    expect(result.message.length).toBeGreaterThan(0);
+  });
+
+  // T20 — NaN start reaches the checker when called directly → INVALID_INPUT
+  it('T20: NaN start time is reported as invalid input', () => {
+    const room = makeRoom();
+    const result = checkAvailability(room, NaN, 660, CURRENT_TIME, makeBookings());
+    expect(result.available).toBe(false);
+    expect(result.reasonCode).toBe('INVALID_INPUT');
+    expect(result.message.length).toBeGreaterThan(0);
   });
 });

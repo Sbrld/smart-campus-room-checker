@@ -84,7 +84,7 @@ function App() {
       </header>
 
       <main className="mx-auto max-w-5xl px-4 py-8">
-        <div className="grid gap-8 lg:grid-cols-[1fr_360px]">
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
           {/* Left — rooms + schedule */}
           <div className="space-y-6">
             <section>
@@ -119,7 +119,7 @@ function App() {
           </div>
 
           {/* Right — check panel */}
-          <aside className="space-y-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm lg:sticky lg:top-6 lg:self-start">
+          <aside className="min-w-0 space-y-5 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5 lg:sticky lg:top-6 lg:self-start">
             <h2 className="text-lg font-semibold text-slate-700">Check Availability</h2>
 
             <TimeSelector label="Current Time (min)" value={currentTime} onChange={setCurrentTime} />
@@ -153,7 +153,10 @@ function App() {
 
             {visibleResult && selectedRoom && (
               <ExplainSection
-                result={visibleResult}
+                result={{
+                  available: visibleResult.available,
+                  reasons: [visibleResult.message],
+                }}
                 roomName={selectedRoom.name}
                 inputs={currentInputs}
               />

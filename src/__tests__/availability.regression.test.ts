@@ -8,8 +8,9 @@ const CURRENT_TIME = 480;
 describe('checkAvailability regressions (AC1, AC3, F3, F5)', () => {
   it('reports unavailable with a reason when no room is selected', () => {
     const result = checkAvailability(null, 600, 660, CURRENT_TIME, SAMPLE_BOOKINGS);
-    expect(result.decision).toBe('unavailable');
-    expect(result.reasons).toEqual(['Please select a room first.']);
+    expect(result.available).toBe(false);
+    expect(result.reasonCode).toBe('NO_ROOM_SELECTED');
+    expect(result.message).toBe('Please select a room first.');
   });
 
   it('never reports a blocked room as available across many valid intervals', () => {
@@ -18,7 +19,7 @@ describe('checkAvailability regressions (AC1, AC3, F3, F5)', () => {
     for (let start = 481; start < 1380; start += 37) {
       for (const length of [15, 60, 120]) {
         const result = checkAvailability(blocked!, start, start + length, CURRENT_TIME, []);
-        expect(result.decision).toBe('unavailable');
+        expect(result.available).toBe(false);
       }
     }
   });
@@ -27,8 +28,8 @@ describe('checkAvailability regressions (AC1, AC3, F3, F5)', () => {
     const lab = SAMPLE_ROOMS.find((r) => r.id === 'r2')!;
     const labBookings = SAMPLE_BOOKINGS.filter((b) => b.roomId === 'r2');
     const otherRoomOnly: Booking[] = SAMPLE_BOOKINGS.filter((b) => b.roomId === 'r1');
-    expect(checkAvailability(lab, 600, 660, CURRENT_TIME, labBookings).decision).toBe('unavailable');
-    expect(checkAvailability(lab, 600, 660, CURRENT_TIME, otherRoomOnly).decision).toBe('available');
+    expect(checkAvailability(lab, 600, 660, CURRENT_TIME, labBookings).available).toBe(false);
+    expect(checkAvailability(lab, 600, 660, CURRENT_TIME, otherRoomOnly).available).toBe(true);
   });
 });
 

@@ -21,7 +21,17 @@ export interface CheckInputs {
   currentTime: number;
 }
 
+export type ReasonCode =
+  | 'AVAILABLE'
+  | 'NO_ROOM_SELECTED'
+  | 'PAST_START_TIME'
+  | 'INVALID_INPUT'
+  | 'INVALID_DURATION'
+  | 'ROOM_BLOCKED'
+  | 'BOOKING_OVERLAP';
+
 export type AvailabilityResult = {
-  decision: 'available' | 'unavailable';
-  reasons: string[];
+  available: boolean;
+  reasonCode: ReasonCode;
+  message: string;
 };

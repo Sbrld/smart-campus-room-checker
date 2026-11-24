@@ -14,24 +14,26 @@ export default function ResultBanner({ result }: ResultBannerProps) {
     );
   }
 
-  const isAvailable = result.decision === 'available';
+  const isAvailable = result.available;
 
   return (
     <div
+      role="status"
+      data-reason-code={result.reasonCode}
       className={[
-        'rounded-xl border p-6',
+        'rounded-xl border p-4 sm:p-6',
         isAvailable
           ? 'border-emerald-200 bg-emerald-50'
           : 'border-red-200 bg-red-50',
       ].join(' ')}
     >
-      <div className="flex items-center gap-3">
+      <div className="flex items-start gap-3">
         {isAvailable ? (
-          <CheckCircle2 className="text-emerald-600" size={28} />
+          <CheckCircle2 className="mt-0.5 shrink-0 text-emerald-600" size={28} />
         ) : (
-          <XCircle className="text-red-600" size={28} />
+          <XCircle className="mt-0.5 shrink-0 text-red-600" size={28} />
         )}
-        <div>
+        <div className="min-w-0">
           <p
             className={[
               'text-lg font-bold',
@@ -40,19 +42,14 @@ export default function ResultBanner({ result }: ResultBannerProps) {
           >
             {isAvailable ? 'Available' : 'Unavailable'}
           </p>
-          <ul className="mt-1 space-y-0.5">
-            {result.reasons.map((r, i) => (
-              <li
-                key={i}
-                className={[
-                  'text-sm',
-                  isAvailable ? 'text-emerald-600' : 'text-red-600',
-                ].join(' ')}
-              >
-                {r}
-              </li>
-            ))}
-          </ul>
+          <p
+            className={[
+              'mt-1 break-words text-sm',
+              isAvailable ? 'text-emerald-600' : 'text-red-600',
+            ].join(' ')}
+          >
+            {result.message}
+          </p>
         </div>
       </div>
     </div>

@@ -1,12 +1,17 @@
 import { useRef, useState } from 'react';
 import { Sparkles } from 'lucide-react';
-import type { AvailabilityResult, CheckInputs } from '../types';
+import type { CheckInputs } from '../types';
+
+interface ExplainResultView {
+  available: boolean;
+  reasons: string[];
+}
 import { explainSafely, EXPLAIN_FALLBACK_TEXT } from '../llm/explain';
 import type { LlmAdapter } from '../llm/explain';
 import { mockLlmAdapter } from '../llm/mockAdapter';
 
 interface ExplainSectionProps {
-  result: AvailabilityResult;
+  result: ExplainResultView;
   roomName: string;
   inputs: CheckInputs;
   adapter?: LlmAdapter;
@@ -32,7 +37,7 @@ export default function ExplainSection({
     setPhase({ kind: 'loading' });
 
     explainSafely(adapter, {
-      decision: result.decision,
+      decision: result.available ? 'available' : 'unavailable',
       reasons: result.reasons,
       roomName,
       start: inputs.start,

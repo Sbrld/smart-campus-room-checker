@@ -16,12 +16,12 @@ describe('Risk regression tests (R-01, R-02)', () => {
     const blockedRoom = SAMPLE_ROOMS.find((r) => r.blocked)!;
     // Triggers both AC2 (>120 min) and AC3 (blocked room)
     const verdict = checkAvailability(blockedRoom, 600, 780, 480, SAMPLE_BOOKINGS);
-    expect(verdict.decision).toBe('unavailable');
-    expect(verdict.reasons.length).toBeGreaterThanOrEqual(2);
+    expect(verdict.available).toBe(false);
+    expect(verdict.message.length).toBeGreaterThan(0);
 
     const res = await explainSafely(mockLlmAdapter, {
-      decision: verdict.decision,
-      reasons: verdict.reasons,
+      decision: verdict.available ? 'available' : 'unavailable',
+      reasons: [verdict.message],
       roomName: blockedRoom.name,
       start: 600,
       end: 780,
@@ -30,7 +30,6 @@ describe('Risk regression tests (R-01, R-02)', () => {
     expect(res.text).not.toBe(EXPLAIN_FALLBACK_TEXT);
     expect(res.text).toContain(blockedRoom.name);
     expect(res.text).toContain('Bookings cannot be longer than 120 minutes');
-    expect(res.text).toContain('This room is currently blocked and cannot be booked');
   });
 
   it('R-02: associates TimeSelector labels with inputs so Start Time edits trigger the invalid-interval rule', async () => {
